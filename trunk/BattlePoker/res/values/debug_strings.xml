@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Debug/Text Test values -->
+    <string name="ace">Ace</string>
+    <string name="two">Two</string>
+    <string name="three">Three</string>
+    <string name="four">Four</string>
+    <string name="five">Five</string>
+    <string name="six">Six</string>
+    <string name="seven">Seven</string>
+    <string name="eight">Eight</string>
+    <string name="nine">Nine</string>
+    <string name="ten">Ten</string>
+    <string name="jack">Jack</string>
+    <string name="queen">Queen</string>
+    <string name="king">King</string>
+    
+    <string name="diamond">Diamonds</string>
+    <string name="club">Clubs</string>
+    <string name="heart">Hearts</string>
+    <string name="spade">Spades</string>
+    
+    <string name="hold">Hold</string>
+    <string name="play">Play</string>
+    <string name="drop">Drop</string>
+    <string name="card">Card </string>
+    <string name="unknown">Unknown</string>
+</resources>
