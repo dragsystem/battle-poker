@@ -77,9 +77,9 @@ cancel = remove all
 
 *Card abilities list*
 
-double damage - [stylized x2] - play does double damage
-View enemy hand - [eyeball logo] - views enemy hand, cannot continue until you press ok to stop showing hand
-destroy hold - [red treasure chest icon?] - destroy enemy hold space, discarding all cards there
+double damage - stylized x2 - play does double damage
+View enemy hand - eyeball logo - views enemy hand, cannot continue until you press ok to stop showing hand
+destroy hold - red treasure chest icon? - destroy enemy hold space, discarding all cards there
 
 NEW Screen mockup (ver. 3)
 
