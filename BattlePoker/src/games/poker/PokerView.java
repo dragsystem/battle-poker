@@ -302,6 +302,23 @@ public class PokerView extends View {
 		}
 	}
 	
+	protected interface Modifier{
+		public void doEffect(boolean opponent);
+		public boolean doCheck(boolean opponent);
+	}
+	
+	protected Modifier[] MODS ={
+		new Modifier(){//double damage
+			public void doEffect(boolean opponent) {
+				currentDamage *=2;
+			}
+			public boolean doCheck(boolean opponent){//always works
+				return true;
+			}
+		},
+		
+	};
+	
 	/*Network functions*/
 	public void updateStateRemote(){
 		
@@ -339,6 +356,8 @@ public class PokerView extends View {
 	public short cursor = 0;
 	
 	public int handIsLegal;
+	public int currentDamage;
+	
 	public int mode = INTERIM;
 	public boolean opponentIsRobot = true;
 	
@@ -377,6 +396,8 @@ public class PokerView extends View {
 			//wait for opponent initialize.
 			//retrieve
 		}
+		
+		mode = PLAYER_SELECT;
 	}
 	
 	public void setTextView(TextView view){
@@ -500,20 +521,27 @@ public class PokerView extends View {
 		
 		//handIsLegal should contain the value of the current hand
 		//use value to determine damage of play
-		//int dmg = handIsLegal;
+		currentDamage = handIsLegal;
 		
 		//Get modifiers
-		List<Integer> l = new ArrayList<Integer>();
+		List<Modifier> l = new ArrayList<Modifier>();
 		for(int i = 0; i<5; i++){
 			if(selected[i])
 			{
 				if(playerHand[i].modifier != -1)
-					l.add(new Integer(playerHand[i].modifier));
+					l.add(MODS[i]);
 			}
 		}
 		
 		//perform modifiers 
+		for(Modifier m : l){
+			if(m.doCheck(false)){
+				m.doEffect(false);
+			}
+		}
 		
+		//deal damages
+		opponentLife = opponentLife - currentDamage;
 		
 		//replace selected cards
 		for(int i = 0; i< 5; i++){
@@ -524,8 +552,10 @@ public class PokerView extends View {
 			}
 		}
 		handIsLegal = -1;
+		currentDamage = 0;
 		
 		//change turn to opponent
+		mode = WAITING_FOR_OPPONENT;
 	}
 	
 	public void doHold(){
@@ -540,24 +570,36 @@ public class PokerView extends View {
 			return;
 		else if(hasSelected && hasHold){
 			//use holdValue and handIsLegal to do damage
-			int holdValue = holdValue();
+			int holdvalue = holdValue();
+			
 			
 			//get modifiers
-			List<Integer> l = new ArrayList<Integer>();
+			List<Modifier> l = new ArrayList<Modifier>();
 			for(int i = 0; i<5; i++){
 				if(selected[i])
 				{
 					if(playerHand[i].modifier != -1)
-						l.add(new Integer(playerHand[i].modifier));
+						l.add(MODS[i]);
 				}
 				if(playerHold[i].num != -1)
 				{
 					if(playerHold[i].modifier != -1)
-						l.add(new Integer(playerHand[i].modifier));
+						l.add(MODS[i]);
 				}
 			}
 			
+			//combine damage first
+			currentDamage = holdvalue + handIsLegal;
+			
 			//perform modifiers
+			for(Modifier m : l){
+				if(m.doCheck(false)){
+					m.doEffect(false);
+				}
+			}
+			
+			//deal damage
+			opponentLife = opponentLife - currentDamage;
 			
 			//remove cards from hold
 			Arrays.fill(playerHold, new Card());
@@ -570,6 +612,7 @@ public class PokerView extends View {
 				}
 			}
 			handIsLegal = -1;
+			currentDamage = 0;
 		}
 		else if (hasSelected){ //&&!hasHold
 			//store selected into hold
@@ -587,29 +630,37 @@ public class PokerView extends View {
 		}
 		else if (hasHold){
 			//play hold as if it were normal
-			int holdValue = holdValue();
+			currentDamage = holdValue();
 			
-			List<Integer> l = new ArrayList<Integer>();
+			List<Modifier> l = new ArrayList<Modifier>();
 			for(int i = 0; i<5; i++){
 				if(playerHold[i].num != -1)
 				{
 					if(playerHold[i].modifier != -1)
-						l.add(new Integer(playerHand[i].modifier));
+						l.add(MODS[i]);
 				}
 			}
 			
 			//perform modifiers
+			for(Modifier m : l){
+				if(m.doCheck(false)){
+					m.doEffect(false);
+				}
+			}
 			
 			//deal damage using holdValue
+			opponentLife = opponentLife - currentDamage;
 			
 			//replace playerHold
 			Arrays.fill(playerHold, new Card());
+			
+			currentDamage = 0;
 		}
 		
 		
 		//turn was actually taken
 		//switch turn for opponent
-		
+		mode = WAITING_FOR_OPPONENT;
 	}
 	
 	public void doDrop(){
@@ -709,6 +760,7 @@ public class PokerView extends View {
 			}
 		}
 		
+		mode = PLAYER_SELECT;
 	}
 	
 	public int holdValue(){
@@ -894,8 +946,10 @@ public class PokerView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		
-		if(mode == WAITING_FOR_OPPONENT)
+		if(mode == TITLE){
+			mStatusText.setText("Press Center to Continue");
+		}
+		else if(mode == WAITING_FOR_OPPONENT)
 		{
 			if(opponentIsRobot)
 			{
@@ -913,103 +967,113 @@ public class PokerView extends View {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent msg) {
         boolean handled = false;
-        //if (mode == PLAYER_SELECT)
-        switch(keyCode){
-        case KeyEvent.KEYCODE_DPAD_LEFT:
-        	if(cursor == 0) //first card -> three buttons
-        		cursor = 6;
-        	else if(cursor == 5 || cursor == 6 || cursor == 7) //three buttons -> card 5
-        		cursor = 4;
-        	else
-        		cursor--;
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_DPAD_RIGHT:
-        	if(cursor == 4) // last card -> three buttons
-        		cursor = 6;
-        	else if(cursor == 5 || cursor == 6 || cursor == 7) //three buttons -> card 1
-        		cursor = 0;
-        	else
-        		cursor++;
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_DPAD_UP:
-        	if(cursor == 7) //drop button -> play button
-        		cursor = 6;
-        	else  // play or cards -> hold button
-        		cursor = 5;
-        	//hold button -> hold button
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_DPAD_DOWN:
-        	if(cursor == 5) //hold button -> play button
-        		cursor = 6;
-        	else  // play or cards -> drop button
-        		cursor = 7;
-        	//drop button -> drop button
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_DPAD_CENTER:
-        	if(cursor < 5){
-        		selected[cursor] = !selected[cursor];
-        		handIsLegal = isLegalMove();
+        if(mode == TITLE){
+        	switch(keyCode){
+        	case KeyEvent.KEYCODE_DPAD_CENTER:
+        		mode = INTERIM;
+        		handled = true;
+        		initGame();
+        		break;
         	}
-        	else if(cursor == 6)
-        		doPlay();
-        	else if(cursor == 7)
-        		doDrop();
-        	else if(cursor == 5)
-        		doHold();
-        	
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_1:
-        	selected[0] = !selected[0];
-        	handIsLegal = isLegalMove();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_2:
-        	selected[1] = !selected[1];
-        	handIsLegal = isLegalMove();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_3:
-        	selected[2] = !selected[2];
-        	handIsLegal = isLegalMove();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_4:
-        	selected[3] = !selected[3];
-        	handIsLegal = isLegalMove();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_5:
-        	selected[4] = !selected[4];
-        	handIsLegal = isLegalMove();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_7:
-        case KeyEvent.KEYCODE_CALL:
-        	doPlay();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_8:
-        	doHold();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_9:
-        	doDrop();
-        	handled = true;
-        	break;
-        case KeyEvent.KEYCODE_0:
-        case KeyEvent.KEYCODE_ENDCALL:
-        	//Deselect all
-        	for(int i = 0; i<5; i++)
-        		selected[i] = false;
-        	handled = true;
-        	break;
-        default:
-        	break;
+        }
+        if (mode == PLAYER_SELECT){
+	        switch(keyCode){
+	        case KeyEvent.KEYCODE_DPAD_LEFT:
+	        	if(cursor == 0) //first card -> three buttons
+	        		cursor = 6;
+	        	else if(cursor == 5 || cursor == 6 || cursor == 7) //three buttons -> card 5
+	        		cursor = 4;
+	        	else
+	        		cursor--;
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_DPAD_RIGHT:
+	        	if(cursor == 4) // last card -> three buttons
+	        		cursor = 6;
+	        	else if(cursor == 5 || cursor == 6 || cursor == 7) //three buttons -> card 1
+	        		cursor = 0;
+	        	else
+	        		cursor++;
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_DPAD_UP:
+	        	if(cursor == 7) //drop button -> play button
+	        		cursor = 6;
+	        	else  // play or cards -> hold button
+	        		cursor = 5;
+	        	//hold button -> hold button
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_DPAD_DOWN:
+	        	if(cursor == 5) //hold button -> play button
+	        		cursor = 6;
+	        	else  // play or cards -> drop button
+	        		cursor = 7;
+	        	//drop button -> drop button
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_DPAD_CENTER:
+	        	if(cursor < 5){
+	        		selected[cursor] = !selected[cursor];
+	        		handIsLegal = isLegalMove();
+	        	}
+	        	else if(cursor == 6)
+	        		doPlay();
+	        	else if(cursor == 7)
+	        		doDrop();
+	        	else if(cursor == 5)
+	        		doHold();
+	        	
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_1:
+	        	selected[0] = !selected[0];
+	        	handIsLegal = isLegalMove();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_2:
+	        	selected[1] = !selected[1];
+	        	handIsLegal = isLegalMove();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_3:
+	        	selected[2] = !selected[2];
+	        	handIsLegal = isLegalMove();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_4:
+	        	selected[3] = !selected[3];
+	        	handIsLegal = isLegalMove();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_5:
+	        	selected[4] = !selected[4];
+	        	handIsLegal = isLegalMove();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_7:
+	        case KeyEvent.KEYCODE_CALL:
+	        	doPlay();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_8:
+	        	doHold();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_9:
+	        	doDrop();
+	        	handled = true;
+	        	break;
+	        case KeyEvent.KEYCODE_0:
+	        case KeyEvent.KEYCODE_ENDCALL:
+	        	//Deselect all
+	        	for(int i = 0; i<5; i++)
+	        		selected[i] = false;
+	        	handled = true;
+	        	break;
+	        default:
+	        	break;
+	        }
         }
         if(handled){
         	if(DEBUG)
