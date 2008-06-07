@@ -21,6 +21,6 @@ public class BattlePoker extends Activity {
         
         mPokerView.setMode(PokerView.TITLE);
         
-        mPokerView.initGame();
+        //mPokerView.initGame();
     }
 }
