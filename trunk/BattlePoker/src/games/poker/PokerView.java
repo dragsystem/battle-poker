@@ -375,8 +375,6 @@ public class PokerView extends View {
 		cursor = 0;
 		handIsLegal = -1;
 		opponentIsRobot = true;
-		
-		mode = TITLE;
 	}
 	
 	public void initGame(){
@@ -397,7 +395,7 @@ public class PokerView extends View {
 			//retrieve
 		}
 		
-		mode = PLAYER_SELECT;
+		setMode(PLAYER_SELECT);
 	}
 	
 	public void setTextView(TextView view){
@@ -405,7 +403,22 @@ public class PokerView extends View {
 	}
 	
 	public void setMode(int mode){
+		setMode(mode, null);
+	}
+	
+	public void setMode(int mode, CharSequence message){
 		this.mode = mode;
+		invalidate();
+		
+		CharSequence str = "";
+		if(this.mode == TITLE){
+			str = "Press Center to Continue";
+		
+			mStatusText.setText(str);
+		}
+		else if (this.mode == PLAYER_SELECT){
+			mStatusText.setText(getStatus());
+		}
 	}
 	
 	public CharSequence describeHand(Card[] hand){
@@ -555,7 +568,7 @@ public class PokerView extends View {
 		currentDamage = 0;
 		
 		//change turn to opponent
-		mode = WAITING_FOR_OPPONENT;
+		setMode(WAITING_FOR_OPPONENT);
 	}
 	
 	public void doHold(){
@@ -660,7 +673,7 @@ public class PokerView extends View {
 		
 		//turn was actually taken
 		//switch turn for opponent
-		mode = WAITING_FOR_OPPONENT;
+		setMode(WAITING_FOR_OPPONENT);
 	}
 	
 	public void doDrop(){
@@ -673,6 +686,8 @@ public class PokerView extends View {
 			}
 		}
 		handIsLegal = -1;
+		
+		setMode(WAITING_FOR_OPPONENT);
 	}
 	
 	public void doRobot(){
@@ -760,7 +775,7 @@ public class PokerView extends View {
 			}
 		}
 		
-		mode = PLAYER_SELECT;
+		setMode(PLAYER_SELECT);
 	}
 	
 	public int holdValue(){
@@ -946,10 +961,7 @@ public class PokerView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		if(mode == TITLE){
-			mStatusText.setText("Press Center to Continue");
-		}
-		else if(mode == WAITING_FOR_OPPONENT)
+		if(mode == WAITING_FOR_OPPONENT)
 		{
 			if(opponentIsRobot)
 			{
@@ -970,13 +982,13 @@ public class PokerView extends View {
         if(mode == TITLE){
         	switch(keyCode){
         	case KeyEvent.KEYCODE_DPAD_CENTER:
-        		mode = INTERIM;
+        		setMode(INTERIM);
         		handled = true;
         		initGame();
         		break;
         	}
         }
-        if (mode == PLAYER_SELECT){
+        else if (mode == PLAYER_SELECT){
 	        switch(keyCode){
 	        case KeyEvent.KEYCODE_DPAD_LEFT:
 	        	if(cursor == 0) //first card -> three buttons
