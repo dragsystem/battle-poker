@@ -697,7 +697,7 @@ public class PokerView extends View {
 		boolean flush = true;
 		boolean five = true;
 		for(int i = 1; i < 5; i++){
-			if(straight && (((oppHand[0].num + i)%13) != oppHand[i].num))
+			if(straight && ((oppHand[0].num + i) != oppHand[i].num))
 				straight = false;
 			if(flush && (oppHand[0].suit != oppHand[i].suit))
 				flush = false;
@@ -711,6 +711,10 @@ public class PokerView extends View {
 				&&(oppHand[0].num == oppHand[2].num || oppHand[4].num == oppHand[2].num))
 				fh = true;
 		
+		boolean rf = false;
+		if(flush && oppHand[0].num == 0 && oppHand[1].num == 9 && oppHand[2].num == 10 && oppHand[3].num == 11
+				&& oppHand[4].num == 12)
+			rf = true;
 		
 		boolean four = false;
 		boolean twop = false;
@@ -826,7 +830,7 @@ public class PokerView extends View {
 			boolean flush = true;
 			boolean five = true;
 			for(int i = 1; i < 5; i++){
-				if(straight && (((selectedHand[0].num + i)%13) != selectedHand[i].num))
+				if(straight && ((selectedHand[0].num + i) != selectedHand[i].num))
 					straight = false;
 				if(flush && (selectedHand[0].suit != selectedHand[i].suit))
 					flush = false;
@@ -842,12 +846,12 @@ public class PokerView extends View {
 					&&(selectedHand[0].num == selectedHand[2].num || selectedHand[4].num == selectedHand[2].num))
 					holdValue = FULL_HOUSE_VALUE;
 			}
+			if(flush && selectedHand[0].num == 0 && selectedHand[1].num == 9 && selectedHand[2].num == 10
+					&&selectedHand[3].num == 11 && selectedHand[4].num == 12)
+				holdValue = ROYAL_FLUSH_VALUE;
+
 			if(straight && flush){
-				if(selectedHand[0].num == 0 && selectedHand[1].num == 9 && selectedHand[2].num == 10
-						&&selectedHand[3].num == 11 && selectedHand[4].num == 12)
-					holdValue = ROYAL_FLUSH_VALUE;
-				else
-					holdValue = STRAIGHT_FLUSH_VALUE;
+				holdValue = STRAIGHT_FLUSH_VALUE;
 			}
 			else if(straight)
 				holdValue = STRAIGHT_VALUE;
@@ -908,7 +912,7 @@ public class PokerView extends View {
 			boolean flush = true;
 			boolean five = true;
 			for(int i = 1; i < 5; i++){
-				if(straight && (((selectedHand[0].num + i)%13) != selectedHand[i].num))
+				if(straight && (selectedHand[0].num + i != selectedHand[i].num))
 					straight = false;
 				if(flush && (selectedHand[0].suit != selectedHand[i].suit))
 					flush = false;
@@ -924,12 +928,11 @@ public class PokerView extends View {
 					&&(selectedHand[0].num == selectedHand[2].num || selectedHand[4].num == selectedHand[2].num))
 					handValue = FULL_HOUSE_VALUE;
 			}
-			if(straight && flush){
-				if(selectedHand[0].num == 0 && selectedHand[1].num == 9 && selectedHand[2].num == 10
-						&&selectedHand[3].num == 11 && selectedHand[4].num == 12)
-					handValue = ROYAL_FLUSH_VALUE;
-				else
-					handValue = STRAIGHT_FLUSH_VALUE;
+			if(flush && selectedHand[0].num == 0 && selectedHand[1].num == 9 && selectedHand[2].num == 10
+					&&selectedHand[3].num == 11 && selectedHand[4].num == 12)
+				handValue = ROYAL_FLUSH_VALUE;
+			else if(straight && flush){
+				handValue = STRAIGHT_FLUSH_VALUE;
 			}
 			else if(straight)
 				handValue = STRAIGHT_VALUE;
