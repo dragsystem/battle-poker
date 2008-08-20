@@ -412,7 +412,12 @@ public class PokerView extends View {
 		
 		CharSequence str = "";
 		if(this.mode == TITLE){
-			str = "Press Center to Continue";
+			if(message!= null){
+				str = message + "\nPress Center to Continue";
+			}else{
+				str = "Press Center to Continue";
+			}
+			
 		
 			mStatusText.setText(str);
 		}
@@ -670,10 +675,14 @@ public class PokerView extends View {
 			currentDamage = 0;
 		}
 		
-		
-		//turn was actually taken
-		//switch turn for opponent
-		setMode(WAITING_FOR_OPPONENT);
+		if(opponentLife <= 0){
+			setMode(TITLE, "You win, bitch");
+		}
+		else{
+			//turn was actually taken
+			//switch turn for opponent
+			setMode(WAITING_FOR_OPPONENT);
+		}
 	}
 	
 	public void doDrop(){
@@ -779,7 +788,11 @@ public class PokerView extends View {
 			}
 		}
 		
-		setMode(PLAYER_SELECT);
+		if(playerLife <= 0 ){
+			setMode(TITLE, "You Lose, Bitch");
+		}else{
+			setMode(PLAYER_SELECT);
+		}
 	}
 	
 	public int holdValue(){
