@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Arrays;
 
 import android.content.Context;
-import android.content.Resources;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -361,8 +361,8 @@ public class PokerView extends View {
 	public int mode = INTERIM;
 	public boolean opponentIsRobot = true;
 	
-	public PokerView(Context context, AttributeSet attrs, Map inflateParams){
-		super(context,attrs,inflateParams);
+	public PokerView(Context context, AttributeSet attrs,int defStyle ){
+		super(context,attrs,defStyle);
 		setFocusable(true);
 		Arrays.fill(playerHand, new Card());
 		Arrays.fill(playerHold, new Card());
