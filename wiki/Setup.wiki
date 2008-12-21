@@ -5,7 +5,6 @@
   # Follow the instructions here to install Android SDK and Eclipse: http://code.google.com/android/intro/installing.html
   # Install Subclipse into Eclipse http://subclipse.tigris.org/
   # Join the Project using the link from the front page
-  #In Eclipse, go to preferences->Android, and set the install directory og 
 
 ===Checkout the code===
   # In Eclipse, do a New Project -> SVN -> Checkout New Project from SVN
@@ -16,3 +15,6 @@
   # Set up directories and other stuff
   # Go Go Speed Racer
   
+===Updating SDK===
+Not a huge deal but make sure you remember to change the install directory when you update your SDK.  This also means changing the Path variable.
+Or, you can create a link to it so that way you can just change the link redirection.
