@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">I'll change whatever I want</string>
+    <string name="hello">Hello World, TipCalculator</string>
     <string name="app_name">Tip Calculator</string>
+<string name="calculate">Calculate Tip</string>
+<string name="bill_label">Total Bill: $ </string>
+<string name="percent">Percent Tip</string>
+
+<string name="percentage_label">Percentage: </string>
+<string name="bill">Total Bill</string>
 </resources>
