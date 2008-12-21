@@ -43,6 +43,7 @@
     android:hint="@string/percent"
     android:textSize="15sp"
     android:gravity="right" 
+    android:numeric="decimal"
     />
 </LinearLayout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
