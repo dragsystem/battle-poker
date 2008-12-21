@@ -361,8 +361,8 @@ public class PokerView extends View {
 	public int mode = INTERIM;
 	public boolean opponentIsRobot = true;
 	
-	public PokerView(Context context, AttributeSet attrs,int defStyle ){
-		super(context,attrs,defStyle);
+	public PokerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 		setFocusable(true);
 		Arrays.fill(playerHand, new Card());
 		Arrays.fill(playerHold, new Card());
