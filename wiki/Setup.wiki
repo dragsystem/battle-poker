@@ -1,0 +1,18 @@
+#summary How to set stuff up for development
+#labels Phase-Design
+
+===Installing stuff===
+  # Follow the instructions here to install Android SDK and Eclipse: http://code.google.com/android/intro/installing.html
+  # Install Subclipse into Eclipse http://subclipse.tigris.org/
+  # Join the Project using the link from the front page
+  #In Eclipse, go to preferences->Android, and set the install directory og 
+
+===Checkout the code===
+  # In Eclipse, do a New Project -> SVN -> Checkout New Project from SVN
+  # Click the source tab to figure out how to connect to the svn trunk
+  # Select the Project you wish to take (or the trunk if you want them all)
+  # Select making the project a chosen project type
+  # Set the Project as an Android->Android Project
+  # Set up directories and other stuff
+  # Go Go Speed Racer
+  
