@@ -37,7 +37,18 @@ public class TipCalculator extends Activity {
         final Button button = (Button)findViewById(R.id.Button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                double billVal = Double.parseDouble(bill.getText().toString());
+            	boolean correctInput = false;
+            	double billVal = 0;
+            	if(bill.getText() != null)
+            	{
+            		try{
+            			billVal = Double.parseDouble(bill.getText().toString());
+            		}
+            		catch(Exception e){
+            			answer.setText("Please input a valid bill.");
+            		}
+            		correctInput = true;
+            	}
                 double percentVal = 0.0;
                 if(percent.getText().toString() != null && !percent.getText().toString().equals("")){
                 	percentVal = Double.parseDouble(percent.getText().toString());
@@ -57,10 +68,13 @@ public class TipCalculator extends Activity {
                 	percentVal = 18.0;
                 }
                 
-                double ans = billVal * percentVal/100.0;
-                double ans2 = billVal + ans;
-                System.out.println("Tip Calculated!");
-                answer.setText("Tip is " + formatDollars(ans) + "\n" + "Total is " + formatDollars(ans2));
+                if(correctInput)
+                {
+	                double ans = billVal * percentVal/100.0;
+	                double ans2 = billVal + ans;
+	                System.out.println("Tip Calculated!");
+	                answer.setText("Tip is " + formatDollars(ans) + "\n" + "Total is " + formatDollars(ans2));
+                }
             }
         });
     }
