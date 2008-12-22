@@ -6,11 +6,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 public class TipCalculator extends Activity {
 	
@@ -30,7 +32,19 @@ public class TipCalculator extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s1.setAdapter(adapter);
         
-        //TODO: Clear percent field when spinner is selected.
+        s1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        	@Override
+        	public void onItemSelected(AdapterView<?> arg0, View arg1,
+        			int position, long id) {
+        		 percent.setText(null, BufferType.EDITABLE);
+        	}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				//Do Nothing
+			}
+        });
+
         //TODO: Give spinner default text that carries no value,
         //and put spinner back to default text when percent field is selected.
         
@@ -72,7 +86,6 @@ public class TipCalculator extends Activity {
                 {
 	                double ans = billVal * percentVal/100.0;
 	                double ans2 = billVal + ans;
-	                System.out.println("Tip Calculated!");
 	                answer.setText("Tip is " + formatDollars(ans) + "\n" + "Total is " + formatDollars(ans2));
                 }
             }
