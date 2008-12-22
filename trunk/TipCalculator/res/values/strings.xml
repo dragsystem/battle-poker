@@ -6,6 +6,8 @@
 <string name="bill_label">Total Bill: $ </string>
 <string name="percent">Percent Tip</string>
 
-<string name="percentage_label">Percentage: </string>
+<string name="percentage_label">Or enter a percentage: </string>
 <string name="bill">Total Bill</string>
+
+<string name="spinner_1_prompt">Choose a tip amount</string>
 </resources>

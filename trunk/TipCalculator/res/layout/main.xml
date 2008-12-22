@@ -30,6 +30,19 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
+<Spinner
+	android:id="@+id/Spinner1"
+	android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:drawSelectorOnTop="true"
+    android:prompt="@string/spinner_1_prompt"
+	/>
+</LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
  <TextView  
     android:layout_width="80px" 
     android:layout_height="wrap_content" 
