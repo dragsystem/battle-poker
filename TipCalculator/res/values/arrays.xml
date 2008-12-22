@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Used for spinner -->
+    <string-array name="tipChoices">
+        <item>10% (Minimum!)</item>
+        <item>12% (Okay tip)</item>
+        <item>15% (Standard)</item>
+        <item>18% (for groups of 6+)</item>
+    </string-array>
+</resources>
