@@ -1,4 +1,6 @@
 #summary The original design document used to decide on the content of the game.
+TODO: edit doc to reflect this-
+"so then essentially the doc changes are: no hold space, discard gives you 10% dmg reduction per card, and all card powers are now on discard, and we have negative card powers now too"
 
 = Introduction =
 
