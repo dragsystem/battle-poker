@@ -34,6 +34,11 @@ Anything that may be stacked by playing multiples is denoted with (stacks)
   * damage burn - immediately take damage equal to 2x the value you would otherwise be healed from all discarded cards(stacks)
   * damage shield reverse - instead of 10% damage reduction, your discarded cards increase damage taken next turn by 10% per discarded card(stacks)
 
+
+*Play Bonuses*
+  * "Same Hand Bonus"- for each hand starting from the third, each time you play the same hand, you get a sizeable, increasing damage bonus.
+  * "Ramp Up Bonus"- for each hand starting from the third, each time you play a hand that is greater than your previous hand, you get bonus damage, which increases each time.
+
 = FYI stuff =
 
   * if you don't play a card this turn, you must discard at least one card
