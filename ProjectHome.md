@@ -1,0 +1,4 @@
+Battle Poker is a small poker-ish game written for the Android OS.
+
+**Basic Concept**
+two players have 5 (or 7) cards in their hand at all times, and draw from a single shared deck of playing cards. Each player has a given amount of life points. Players take turns playing poker hands, but are not comparing it to each others hands. A player plays a hand, and that hand does damage to the other player, depending on what hand it is and what cards are used to make that hand. For instance, a full house does more damage than a pair of 8s, and a pair of 8s does more damage than a pair of 2s. After a player plays their cards, they draw cards to make up for the cards they used, until they have the normal hand size, and then the next player takes their turn. The person that puts the enemy to 0 life points first wins. After a deck is used, the cards not held by players are shuffled and put back into the pile.
